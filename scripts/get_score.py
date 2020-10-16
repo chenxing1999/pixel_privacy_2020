@@ -49,7 +49,7 @@ def main():
 
     fout = open(args.output_csv, "w")
     fout.write("file_name,score\n")
-    for i, fname in enumerate(tqdm.tqdm(fname_list)):
+    for i, fname in enumerate(tqdm.tqdm(fname_list, ascii=True)):
         true_name = fname[:len(fname)-3] + "png"
         fpath = os.path.join(args.input_folder, true_name)
         score = model.process(fpath)
