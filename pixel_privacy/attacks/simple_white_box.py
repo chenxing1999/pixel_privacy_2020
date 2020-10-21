@@ -42,7 +42,9 @@ class SimpleWhiteBox(object):
         transform=None,
         reverse_transform=None,
         lr=1e-7,
-        device=None
+        device=None,
+        ilen=5,
+        jlen=20,
     ):
         if device is None:
             device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -59,9 +61,6 @@ class SimpleWhiteBox(object):
         model.to(device)
         model.eval()
         tensor = tensor.to(device)
-
-        ilen = 5
-        jlen = 20
 
         self.logger.debug("Finish prepare data")
 
@@ -100,8 +99,10 @@ class SimpleWhiteBox(object):
                 tensor = tensor.to(device)
 
                 score = model(tensor)[0].item()
-                image.save(f"debug_images/{i}_{score}.jpg")
-                print(f"{i} - {score}")
+                self.logger.info(f"Score: {score}")
+                if score < 50:
+                    return image
+        return image
 
 
     def load_attack_image(self, image_path, transform=None):
